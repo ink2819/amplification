@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sidebar-v2 example</title>
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      crossorigin=""
+    />
+
+    <link rel="stylesheet" href="../css/leaflet-sidebar.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+
+      html,
+      body,
+      #map {
+        height: 100%;
+        font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
+      }
+
+      .lorem {
+        font-style: italic;
+        color: #aaa;
+      }
+
+      .custom-cluster {
+      background-color: #508e88;
+      border-radius: 50%;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      line-height: 30px;
+      width: 30px;
+      height: 30px;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+      <!-- Nav tabs -->
+      <div class="leaflet-sidebar-tabs">
+        <ul role="tablist">
+          <li>
+            <a href="#home" role="tab"><i class="fa fa-bars"></i></a>
+          </li>
+          <li>
+            <a href="#profile" role="tab"><i class="fa fa-user"></i></a>
+          </li>
+          <li class="disabled">
+            <a href="#messages" role="tab"><i class="fa fa-envelope"></i></a>
+          </li>
+        </ul>
+
+        <ul role="tablist">
+          <li>
+            <a href="#settings" role="tab"><i class="fa fa-gear"></i></a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab panes -->
+      <div class="leaflet-sidebar-content">
+        <div class="leaflet-sidebar-pane" id="home">
+          <h1 class="leaflet-sidebar-header">
+            Artworks associated with the location
+            <span class="leaflet-sidebar-close"
+              ><i class="fa fa-caret-right"></i
+            ></span>
+          </h1>
+          <div class="sidebar-menu">
+            
+          </div>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="profile">
+          <h1 class="leaflet-sidebar-header">
+            Profile<span class="leaflet-sidebar-close"
+              ><i class="fa fa-caret-right"></i
+            ></span>
+          </h1>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="messages">
+          <h1 class="leaflet-sidebar-header">
+            Messages<span class="leaflet-sidebar-close"
+              ><i class="fa fa-caret-right"></i
+            ></span>
+          </h1>
+        </div>
+
+        <div class="leaflet-sidebar-pane" id="settings">
+          <h1 class="leaflet-sidebar-header">
+            Settings<span class="leaflet-sidebar-close"
+              ><i class="fa fa-caret-right"></i
+            ></span>
+          </h1>
+        </div>
+      </div>
+    </div>
+
+    <div id="map"></div>
+
+    <a href="https://github.com/nickpeihl/leaflet-sidebar-v2/"
+      ><img
+        style="position: fixed; top: 0; left: 0; border: 0; z-index: 1000;"
+        src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"
+        alt="Fork me on GitHub"
+    /></a>
+
+    <script
+      src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+      crossorigin=""
+    ></script>
+    <script src="../js/leaflet-sidebar.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  
+    <!-- PapaParse -->
+    <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+
+    <script>
+      
+      var map = L.map("map", {
+        zoomControl: false
+      });
+      map.setView([41,-74], 9);
+
+      const connectionLines = L.layerGroup().addTo(map);
+
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 20}).addTo(map);
+
+      const sidebarMenu = document.getElementById("sidebar-menu");
+
+      L.control
+        .zoom({
+          position: "topright"
+        })
+        .addTo(map);
+
+      var marker = L.marker([41,-74]).addTo(map);
+
+      var sidebar = L.control
+        .sidebar({ container: "sidebar", position: "left" })
+        .addTo(map)
+        .open("home");
+        const highlightColor = "#508e88";
+
+// Function to style only the countries
+function countryStyle(feature) {
+  const highlightCountries = ["Ireland", "Jordan", "Bahrain","Egypt","Palestine","United Kingdom","Israel","Tunisia","Italy"]; 
+  return {
+    fillColor: highlightCountries.includes(feature.properties.name) ? highlightColor : "transparent",
+    weight: 1,
+    color: "#ccc",
+    fillOpacity: highlightCountries.includes(feature.properties.name) ? 0.5 : 0
+  };
+}
+fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+  .then(res => res.json())
+  .then(data => {
+    L.geoJSON(data, {
+      style: countryStyle
+    }).addTo(map);
+  });
+
+  const highlightStates = ["Massachusetts", "Michigan", "California","California","New York"];
+
+  function stateStyle(feature) {
+      const isHighlighted = highlightStates.includes(feature.properties.name);
+      return {
+        fillColor: isHighlighted ? highlightColor : "transparent",
+        fillOpacity: isHighlighted ? 0.5 : 0,
+        color: "#ccc",
+        weight: 1
+      };
+    }
+
+    fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/refs/heads/master/data/geojson/us-states.json')
+      .then(res => res.json())
+      .then(data => {
+        const layer = L.geoJSON(data, {
+          style: stateStyle
+        }).addTo(map);
+
+        map.fitBounds(layer.getBounds());
+      });
+
+      // MarkerCluster group
+    const markers = L.markerClusterGroup({
+      iconCreateFunction: function(cluster) {
+        return L.divIcon({
+          html: `<div class="custom-cluster">${cluster.getChildCount()}</div>`,
+          className: 'marker-cluster',
+          iconSize: [30, 30]
+        });
+      }
+    });
+
+    // Load CSV and parse
+    const works = [];
+
+Papa.parse('works.csv', {
+  header: true,
+  download: true,
+  complete: function(results) {
+    results.data.forEach(row => {
+      function parseLatLng(str) {
+        if (!str || !str.includes(',')) return null;
+        const [lat, lng] = str.split(',').map(Number);
+        if (isNaN(lat) || isNaN(lng)) return null;
+        return { lat, lng };
+      }
+
+      const coords1 = parseLatLng(row.coordinates);
+      const coords2 = parseLatLng(row.coordinates2);
+
+      [coords1, coords2].forEach(coords => {
+        if (coords) {
+          const work = {
+            lat: coords.lat,
+            lng: coords.lng,
+            title: row.Title,
+            author: row.Author,
+            publishedOn: row["Published On"]
+          };
+          works.push(work);
+
+          const circle = L.circleMarker([coords.lat, coords.lng], {
+            radius: 6,
+            color: "#508e88",
+            fillColor: "#508e88",
+            fillOpacity: 0.5
+          });
+          markers.addLayer(circle);
+        }
+      });
+    });
+
+    map.addLayer(markers);
+    map.fitBounds(markers.getBounds());
+
+    // enable interaction
+    loadClickableGeoJSONLayers();
+  }
+});
+
+function loadClickableGeoJSONLayers() {
+  // Country Layer
+  fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+    .then(res => res.json())
+    .then(data => {
+      L.geoJSON(data, {
+        style: countryStyle,
+        onEachFeature: function (feature, layer) {
+          layer.on("click", () => {
+            const region = {
+              type: "Feature",
+              geometry: layer.toGeoJSON().geometry
+            };
+            showWorksInShape(region, feature.properties.name);
+            sidebar.open("home");
+          });
+        }
+      }).addTo(map);
+    });
+
+  // State Layer
+  fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/refs/heads/master/data/geojson/us-states.json')
+    .then(res => res.json())
+    .then(data => {
+      const stateLayer = L.geoJSON(data, {
+        style: stateStyle,
+        onEachFeature: function (feature, layer) {
+          layer.on("click", () => {
+            const region = {
+              type: "Feature",
+              geometry: layer.toGeoJSON().geometry
+            };
+            showWorksInShape(region, feature.properties.name);
+            sidebar.open("home");
+          });
+        }
+      }).addTo(map);
+    });
+}
+
+function showWorksInShape(polygon, regionName) {
+  const container = document.querySelector(".sidebar-menu");
+  container.innerHTML = `<h4>Works in ${regionName}</h4>`;
+
+  // Clear previous lines
+  connectionLines.clearLayers();
+
+  const matches = works.filter(work => {
+    const point = turf.point([work.lng, work.lat]);
+    return turf.booleanPointInPolygon(point, polygon);
+  });
+
+  if (matches.length === 0) {
+    container.innerHTML += "<p class='lorem'>No works found in this region.</p>";
+    return;
+  }
+
+  // Display cards
+  matches.forEach(work => {
+    const card = document.createElement("div");
+    card.className = "sidebar-card";
+    card.innerHTML = `
+      <strong>${work.title}</strong><br/>
+      <em>By ${work.author}</em><br/>
+      <small>Published On: ${work.publishedOn}</small>
+    `;
+    container.appendChild(card);
+  });
+
+  // Draw connections to secondary coordinates
+  matches.forEach(primaryWork => {
+    // Find all works that share the same title (i.e., same entry, multiple locations)
+    const sharedWorks = works.filter(w => w.title === primaryWork.title);
+
+    sharedWorks.forEach(secondaryWork => {
+      // If it's not the same location, draw a line
+      if (
+        (primaryWork.lat !== secondaryWork.lat) ||
+        (primaryWork.lng !== secondaryWork.lng)
+      ) {
+        const line = L.polyline([
+          [primaryWork.lat, primaryWork.lng],
+          [secondaryWork.lat, secondaryWork.lng]
+        ], {
+          color: "#508e88",
+          weight: 1.5,
+          opacity: 0.6,
+          dashArray: "4"
+        });
+        connectionLines.addLayer(line);
+      }
+    });
+  });
+}
+
+
+    </script>
+    <!-- Turf.js -->
+<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
+  </body>
+</html>

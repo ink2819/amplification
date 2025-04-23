@@ -20,7 +20,7 @@ To simplify this process, a Jupyter notebook (`data_formatter.ipynb`) is include
 
 ```text
 ├── /data
-│   └── artworks.json              # Raw dataset used for mapping (update this directly)
+│   └── artworks.csv              # Raw dataset used for mapping (update this directly)
 │   └── data_formatter.ipynb       # Script to re-format data for the map
 │   └── cleaned_data_{{date}}.csv  # Cleaned dataset (generated from the script)
 ├── /js

@@ -169,7 +169,7 @@
 
 // Function to style only the countries
 function countryStyle(feature) {
-  const highlightCountries = ["Ireland", "Jordan", "Bahrain","Egypt","Palestine","United Kingdom","Israel","Tunisia","Italy"]; 
+  const highlightCountries = ["Ireland", "Jordan", "Bahrain","Egypt","Palestine","United Kingdom","Israel","Tunisia","Italy"];//note:I'm going to change this into automated-generation from the data once the data-cleaning script is finished. 
   return {
     fillColor: highlightCountries.includes(feature.properties.name) ? highlightColor : "transparent",
     weight: 1,
@@ -221,7 +221,7 @@ fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.g
     // Load CSV and parse
     const works = [];
 
-Papa.parse('works.csv', {
+Papa.parse('./data/cleaned_data_2025-04-23.csv', {
   header: true,
   download: true,
   complete: function(results) {
@@ -337,7 +337,7 @@ function showWorksInShape(polygon, regionName) {
 
   // Draw connections to secondary coordinates
   matches.forEach(primaryWork => {
-    // Find all works that share the same title (i.e., same entry, multiple locations)
+    // Find all works that share the same title
     const sharedWorks = works.filter(w => w.title === primaryWork.title);
 
     sharedWorks.forEach(secondaryWork => {

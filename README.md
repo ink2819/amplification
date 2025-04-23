@@ -18,20 +18,20 @@ To simplify this process, a Jupyter notebook (`data_formatter.ipynb`) is include
 
 ## Repository Structure
 
----
+```text
 ├── /data
-│   └── artworks.json         # Raw data set used for mapping(update this directly)
-│   └── data_formatter.ipynb      #script to re-format data for the map
-│   └── cleaned_data_{{date}}.csv      #cleaned data (generated from the script)
+│   └── artworks.json              # Raw dataset used for mapping (update this directly)
+│   └── data_formatter.ipynb       # Script to re-format data for the map
+│   └── cleaned_data_{{date}}.csv  # Cleaned dataset (generated from the script)
 ├── /js
 │   └── leaflet-sidebar.js
 │   └── leaflet-sidebar.min.js
 ├── /css
-│   └── leaflet-sidebar.css     
+│   └── leaflet-sidebar.css
 │   └── leaflet-sidebar.min.css
 ├── /scss
-│   └── leaflet-sidebar.scss     
+│   └── leaflet-sidebar.scss
 │   └── _base.scss
-├── index.html                
-└── README.md   
----
+├── index.html
+└── README.md
+```

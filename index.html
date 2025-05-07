@@ -1,369 +1,230 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>sidebar-v2 example</title>
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-
-    <link
-      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-      crossorigin=""
-    />
-
-    <link rel="stylesheet" href="../css/leaflet-sidebar.css" />
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-
-
-    <style>
-      body {
-        padding: 0;
-        margin: 0;
-      }
-
-      html,
-      body,
-      #map {
-        height: 100%;
-        font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
-      }
-
-      .lorem {
-        font-style: italic;
-        color: #aaa;
-      }
-
-      .custom-cluster {
-      background-color: #508e88;
-      border-radius: 50%;
-      color: white;
-      text-align: center;
-      font-weight: bold;
-      line-height: 30px;
-      width: 30px;
-      height: 30px;
+<head>
+  <meta charset="utf-8" />
+  <title>Amplification Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="../css/leaflet-sidebar.css" />
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
+  <style>
+    body, html, #map {
+      height: 100%;
+      margin: 0;
+      font: 10pt "Helvetica Neue", Arial, Helvetica, sans-serif;
     }
-    </style>
-  </head>
-  <body>
-    <div id="sidebar" class="leaflet-sidebar collapsed">
-      <!-- Nav tabs -->
-      <div class="leaflet-sidebar-tabs">
-        <ul role="tablist">
-          <li>
-            <a href="#home" role="tab"><i class="fa fa-bars"></i></a>
-          </li>
-          <li>
-            <a href="#profile" role="tab"><i class="fa fa-user"></i></a>
-          </li>
-          <li class="disabled">
-            <a href="#messages" role="tab"><i class="fa fa-envelope"></i></a>
-          </li>
-        </ul>
-
-        <ul role="tablist">
-          <li>
-            <a href="#settings" role="tab"><i class="fa fa-gear"></i></a>
-          </li>
-        </ul>
+    .sidebar-card {
+      border-bottom: 1px solid #ccc;
+      padding: 10px 0;
+    }
+    .sidebar-card img {
+      width: 100%;
+      max-height: 150px;
+      object-fit: cover;
+      margin-bottom: 5px;
+    }
+    .lorem { font-style: italic; color: #aaa; }
+  </style>
+</head>
+<body>
+  <div id="sidebar" class="leaflet-sidebar">
+    <div class="leaflet-sidebar-tabs">
+      <ul role="tablist">
+        <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+        <li><a href="#about" role="tab"><i class="fa fa-user"></i></a></li>
+      </ul>
+    </div>
+    <div class="leaflet-sidebar-content">
+      <div class="leaflet-sidebar-pane" id="home">
+        <h1 class="leaflet-sidebar-header">
+          Artworks associated with the location
+          <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+        </h1>
+        <div class="sidebar-menu"></div>
       </div>
-
-      <!-- Tab panes -->
-      <div class="leaflet-sidebar-content">
-        <div class="leaflet-sidebar-pane" id="home">
-          <h1 class="leaflet-sidebar-header">
-            Artworks associated with the location
-            <span class="leaflet-sidebar-close"
-              ><i class="fa fa-caret-right"></i
-            ></span>
-          </h1>
-          <div class="sidebar-menu">
-            
-          </div>
-        </div>
-
-        <div class="leaflet-sidebar-pane" id="profile">
-          <h1 class="leaflet-sidebar-header">
-            Profile<span class="leaflet-sidebar-close"
-              ><i class="fa fa-caret-right"></i
-            ></span>
-          </h1>
-        </div>
-
-        <div class="leaflet-sidebar-pane" id="messages">
-          <h1 class="leaflet-sidebar-header">
-            Messages<span class="leaflet-sidebar-close"
-              ><i class="fa fa-caret-right"></i
-            ></span>
-          </h1>
-        </div>
-
-        <div class="leaflet-sidebar-pane" id="settings">
-          <h1 class="leaflet-sidebar-header">
-            Settings<span class="leaflet-sidebar-close"
-              ><i class="fa fa-caret-right"></i
-            ></span>
-          </h1>
+      <div class="leaflet-sidebar-pane" id="about">
+        <h1 class="leaflet-sidebar-header">
+          About<span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span>
+        </h1>
+        <div class="sidebar-menu">
+          <p><strong>A spatial interface for exploring the Amplification Project’s digital archive.</strong></p>
+          <p>This project is a narrative-driven interactive web map built with Leaflet, visualizing 76 artworks from the Amplification Project archive based on associated geographic metadata. It is structured on the leaflet-sidebar-v2 template. The map enables users to explore artworks by geographic reference—whether that's the site of creation, exhibition, or thematic relevance.</p>
         </div>
       </div>
     </div>
+  </div>
 
-    <div id="map"></div>
+  <div id="map"></div>
 
-    <a href="https://github.com/nickpeihl/leaflet-sidebar-v2/"
-      ><img
-        style="position: fixed; top: 0; left: 0; border: 0; z-index: 1000;"
-        src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"
-        alt="Fork me on GitHub"
-    /></a>
+  <!-- Libraries -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/leaflet-sidebar.js"></script>
+  <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
 
-    <script
-      src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
-      crossorigin=""
-    ></script>
-    <script src="../js/leaflet-sidebar.js"></script>
-    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-  
-    <!-- PapaParse -->
-    <script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+  <script>
+    const map = L.map("map", { zoomControl: false }).setView([41, -74], 3);
+    const highlightColor = "#508e88";
+    const connectionLines = L.layerGroup().addTo(map);
+    const sidebar = L.control.sidebar({ container: "sidebar", position: "left" }).addTo(map).open("about");
+    const sidebarMenu = document.querySelector("#home .sidebar-menu");
 
-    <script>
-      
-      var map = L.map("map", {
-        zoomControl: false
-      });
-      map.setView([41,-74], 9);
-
-      const connectionLines = L.layerGroup().addTo(map);
-
-
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png', {
-	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-	subdomains: 'abcd',
-	maxZoom: 20}).addTo(map);
-
-      const sidebarMenu = document.getElementById("sidebar-menu");
-
-      L.control
-        .zoom({
-          position: "topright"
-        })
-        .addTo(map);
-
-      var marker = L.marker([41,-74]).addTo(map);
-
-      var sidebar = L.control
-        .sidebar({ container: "sidebar", position: "left" })
-        .addTo(map)
-        .open("home");
-        const highlightColor = "#508e88";
-
-// Function to style only the countries
-function countryStyle(feature) {
-  const highlightCountries = ["Ireland", "Jordan", "Bahrain","Egypt","Palestine","United Kingdom","Israel","Tunisia","Italy"];//note:I'm going to change this into automated-generation from the data once the data-cleaning script is finished. 
-  return {
-    fillColor: highlightCountries.includes(feature.properties.name) ? highlightColor : "transparent",
-    weight: 1,
-    color: "#ccc",
-    fillOpacity: highlightCountries.includes(feature.properties.name) ? 0.5 : 0
-  };
-}
-fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
-  .then(res => res.json())
-  .then(data => {
-    L.geoJSON(data, {
-      style: countryStyle
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; Stadia Maps, OpenMapTiles & OpenStreetMap',
+      maxZoom: 20
     }).addTo(map);
-  });
 
-  const highlightStates = ["Massachusetts", "Michigan", "California","California","New York"];
+    const works = [];
+    const locationLookup = {};
 
-  function stateStyle(feature) {
-      const isHighlighted = highlightStates.includes(feature.properties.name);
-      return {
-        fillColor: isHighlighted ? highlightColor : "transparent",
-        fillOpacity: isHighlighted ? 0.5 : 0,
-        color: "#ccc",
-        weight: 1
-      };
+    function loadLocationCoords() {
+      return new Promise(resolve => {
+        Papa.parse('./data/countryCords.csv', {
+          header: true,
+          download: true,
+          complete: function(results) {
+            results.data.forEach(row => {
+              if (row.name && row.lat && row.lng) {
+                locationLookup[row.name.trim()] = [parseFloat(row.lat), parseFloat(row.lng)];
+              }
+            });
+            resolve();
+          }
+        });
+      });
     }
 
-    fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/refs/heads/master/data/geojson/us-states.json')
-      .then(res => res.json())
-      .then(data => {
-        const layer = L.geoJSON(data, {
-          style: stateStyle
-        }).addTo(map);
+    function loadWorksAndLayers() {
+      Papa.parse('./data/cleaned_data_2025-05-07.csv', {
+        header: true,
+        download: true,
+        complete: function(results) {
+          results.data.forEach(row => {
+          const states = Object.keys(row)
+            .filter(k => k.startsWith("state") && row[k])
+            .map(k => row[k]);
 
-        map.fitBounds(layer.getBounds());
-      });
+          console.log(`States for "${row.Title}":`, states);
 
-      // MarkerCluster group
-    const markers = L.markerClusterGroup({
-      iconCreateFunction: function(cluster) {
-        return L.divIcon({
-          html: `<div class="custom-cluster">${cluster.getChildCount()}</div>`,
-          className: 'marker-cluster',
-          iconSize: [30, 30]
-        });
-      }
-    });
-
-    // Load CSV and parse
-    const works = [];
-
-Papa.parse('./data/cleaned_data_2025-04-23.csv', {
-  header: true,
-  download: true,
-  complete: function(results) {
-    results.data.forEach(row => {
-      function parseLatLng(str) {
-        if (!str || !str.includes(',')) return null;
-        const [lat, lng] = str.split(',').map(Number);
-        if (isNaN(lat) || isNaN(lng)) return null;
-        return { lat, lng };
-      }
-
-      const coords1 = parseLatLng(row.coordinates);
-      const coords2 = parseLatLng(row.coordinates2);
-
-      [coords1, coords2].forEach(coords => {
-        if (coords) {
-          const work = {
-            lat: coords.lat,
-            lng: coords.lng,
+          const entry = {
             title: row.Title,
             author: row.Author,
-            publishedOn: row["Published On"]
+            publishedOn: row["Published On"],
+            slug: row.Slug,
+            img: row.Cover_img,
+            countries: Object.keys(row)
+              .filter(k => k.startsWith("country") && row[k] && !["United States", "United States of America"].includes(row[k]))
+              .map(k => row[k]),
+            states: states
           };
-          works.push(work);
 
-          const circle = L.circleMarker([coords.lat, coords.lng], {
-            radius: 6,
-            color: "#508e88",
-            fillColor: "#508e88",
-            fillOpacity: 0.5
+          works.push(entry);
           });
-          markers.addLayer(circle);
+
+          loadShapeLayers();
         }
       });
-    });
+    }
 
-    map.addLayer(markers);
-    map.fitBounds(markers.getBounds());
-
-    // enable interaction
-    loadClickableGeoJSONLayers();
-  }
-});
-
-function loadClickableGeoJSONLayers() {
-  // Country Layer
-  fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
-    .then(res => res.json())
-    .then(data => {
-      L.geoJSON(data, {
-        style: countryStyle,
-        onEachFeature: function (feature, layer) {
-          layer.on("click", () => {
-            const region = {
-              type: "Feature",
-              geometry: layer.toGeoJSON().geometry
-            };
-            showWorksInShape(region, feature.properties.name);
-            sidebar.open("home");
-          });
-        }
-      }).addTo(map);
-    });
-
-  // State Layer
-  fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/refs/heads/master/data/geojson/us-states.json')
-    .then(res => res.json())
-    .then(data => {
-      const stateLayer = L.geoJSON(data, {
-        style: stateStyle,
-        onEachFeature: function (feature, layer) {
-          layer.on("click", () => {
-            const region = {
-              type: "Feature",
-              geometry: layer.toGeoJSON().geometry
-            };
-            showWorksInShape(region, feature.properties.name);
-            sidebar.open("home");
-          });
-        }
-      }).addTo(map);
-    });
-}
-
-function showWorksInShape(polygon, regionName) {
-  const container = document.querySelector(".sidebar-menu");
-  container.innerHTML = `<h4>Works in ${regionName}</h4>`;
-
-  // Clear previous lines
-  connectionLines.clearLayers();
-
-  const matches = works.filter(work => {
-    const point = turf.point([work.lng, work.lat]);
-    return turf.booleanPointInPolygon(point, polygon);
-  });
-
-  if (matches.length === 0) {
-    container.innerHTML += "<p class='lorem'>No works found in this region.</p>";
-    return;
-  }
-
-  // Display cards
-  matches.forEach(work => {
-    const card = document.createElement("div");
-    card.className = "sidebar-card";
-    card.innerHTML = `
-      <strong>${work.title}</strong><br/>
-      <em>By ${work.author}</em><br/>
-      <small>Published On: ${work.publishedOn}</small>
-    `;
-    container.appendChild(card);
-  });
-
-  // Draw connections to secondary coordinates
-  matches.forEach(primaryWork => {
-    // Find all works that share the same title
-    const sharedWorks = works.filter(w => w.title === primaryWork.title);
-
-    sharedWorks.forEach(secondaryWork => {
-      // If it's not the same location, draw a line
-      if (
-        (primaryWork.lat !== secondaryWork.lat) ||
-        (primaryWork.lng !== secondaryWork.lng)
-      ) {
-        const line = L.polyline([
-          [primaryWork.lat, primaryWork.lng],
-          [secondaryWork.lat, secondaryWork.lng]
-        ], {
-          color: "#508e88",
-          weight: 1.5,
-          opacity: 0.6,
-          dashArray: "4"
+    function loadShapeLayers() {
+      fetch('./mapLayers/countries.geojson')
+        .then(res => res.json())
+        .then(countryData => {
+          L.geoJSON(countryData, {
+            style: feature => {
+              const name = feature.properties.name;
+              const match = works.some(w =>
+                w.countries.includes(name) || w.states.includes(name)
+              );
+              return {
+                fillColor: match && name !== "United States" && name !== "United States of America" ? highlightColor : "transparent",
+                color: "#ccc",
+                weight: 1,
+                fillOpacity: match ? 0.5 : 0
+              };
+            },
+            onEachFeature: (feature, layer) => {
+              const name = feature.properties.name;
+              if (name === "United States" || name === "United States of America") return;
+              layer.on("click", () => {
+                showWorksByRegion(name);
+              });
+            }
+          }).addTo(map);
         });
-        connectionLines.addLayer(line);
+
+      fetch('./mapLayers/state.json')
+        .then(res => res.json())
+        .then(stateData => {
+          L.geoJSON(stateData, {
+            style: feature => {
+              const name = feature.properties.NAME;
+              const match = works.some(w => w.states.includes(name));
+              return {
+                fillColor: match ? highlightColor : "transparent",
+                color: "#ccc",
+                weight: 1,
+                fillOpacity: match ? 0.5 : 0
+              };
+            },
+            onEachFeature: (feature, layer) => {
+              const name = feature.properties.NAME;
+              layer.on("click", () => {
+                showWorksByRegion(name);
+              });
+            }
+          }).addTo(map);
+        });
+    }
+
+    function showWorksByRegion(regionName) {
+      sidebarMenu.innerHTML = `<h4>Works in ${regionName}</h4>`;
+      connectionLines.clearLayers();
+
+      const matched = works.filter(work =>
+        work.states.includes(regionName) || work.countries.includes(regionName)
+      );
+
+      if (matched.length === 0) {
+        sidebarMenu.innerHTML += "<p class='lorem'>No works found in this region.</p>";
+        return;
       }
-    });
-  });
-}
 
+      matched.forEach(work => {
+        const card = document.createElement("div");
+        card.className = "sidebar-card";
+        card.innerHTML = `
+          <a href="https://www.theamplificationproject.org/projects/${work.slug}" target="_blank">
+            <img src="${work.img}" alt="${work.title}">
+            <strong>${work.title}</strong><br/>
+            <em>By ${work.author}</em><br/>
+            <small>Published On: ${work.publishedOn}</small>
+          </a>
+        `;
+        sidebarMenu.appendChild(card);
 
-    </script>
-    <!-- Turf.js -->
-<script src="https://cdn.jsdelivr.net/npm/@turf/turf@6.5.0/turf.min.js"></script>
-  </body>
+        const linkedPlaces = [...work.states, ...work.countries]
+          .filter(name => name !== regionName && locationLookup[name]);
+
+        linkedPlaces.forEach(dest => {
+          const from = locationLookup[regionName];
+          const to = locationLookup[dest];
+          if (from && to) {
+            const line = L.polyline([from, to], {
+              color: highlightColor,
+              weight: 1.5,
+              opacity: 0.6,
+              dashArray: "4"
+            });
+            connectionLines.addLayer(line);
+          }
+        });
+      });
+
+      sidebar.open("home");
+    }
+
+    loadLocationCoords().then(loadWorksAndLayers);
+  </script>
+</body>
 </html>

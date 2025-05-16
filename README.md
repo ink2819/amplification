@@ -49,13 +49,18 @@ AMPLIFICATION/
 ## Acknowledgements
 
 Artworks Data: [Amplification Project](https://www.theamplificationproject.org/)
+
 Leaflet Template: [leaflet-sidebar-v2](https://github.com/noerw/leaflet-sidebar-v2)
+
 Countries Shapefile: [datasets/geo-countries](https://github.com/datasets/geo-countries/blob/b0b7794e15e7ec4374bf183dd73cce5b92e1c0ae/data/countries.geojson)
+
 States Shapefile:[loganpowell/census-geojson](https://github.com/loganpowell/census-geojson/blob/master/GeoJSON/20m/2022/state.json)
+
 Country/State Coordinates: Manually aggregated from [Google Open Data] (https://developers.google.com/public-data)
+
 Country Names: [umpirskycountry-list](https://github.com/umpirsky/country-list) + Manual Modification
 
-Debug and Trouble shooting: ChatGPT 04-mini-high
+Debug and Trouble shooting, instructional comment editing, markdown formatting: ChatGPT 04-mini-high
 
 ## Project Workflow
 - **Cleaning**  

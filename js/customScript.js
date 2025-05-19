@@ -5,10 +5,11 @@
     const sidebar = L.control.sidebar({ container: "sidebar", position: "left" }).addTo(map).open("about");
     const sidebarMenu = document.querySelector("#home .sidebar-menu");
 
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; Stadia Maps, OpenMapTiles & OpenStreetMap',
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://carto.com/">CARTO</a>, OpenStreetMap contributors',
       maxZoom: 20
-    }).addTo(map);
+      }).addTo(map);
+
 
     const works = [];
     const locationLookup = {};
